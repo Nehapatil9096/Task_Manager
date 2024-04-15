@@ -3,8 +3,6 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useAuthContext } from "../../context/AuthContext";
 import styles from "./SettingPage.module.css";
-import lockIcon from "/lock.png";
-import nameIcon from "/name.png";
 import viewIcon from "/view.png";
 
 const SettingsPage = () => {
@@ -112,7 +110,6 @@ return (
         value={userSettings.name}
         onChange={(e) => setUserSettings({ ...userSettings, name: e.target.value })}
       />  <span className={styles.icon}>
-      <img src={nameIcon} alt="Name Icon" />
     </span>
     </label>
 
@@ -136,7 +133,6 @@ return (
 </span>
 
       <span className={styles.icon}>
-          <img src={lockIcon} alt="Lock Icon" />
         </span>
     </label>
 
@@ -161,7 +157,6 @@ return (
 />
 </span>
       <span className={styles.icon}>
-          <img src={lockIcon} alt="Lock Icon" />
         </span>
     </label>
 

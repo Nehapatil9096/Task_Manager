@@ -108,14 +108,16 @@ height: 24px;
 cursor: pointer;
 margin-right: 10px; /* Adjust as needed */
 }
-.addButton{
-width: 24px;
-height: 24px;
-cursor: pointer;
-margin-right: -170px; /* Adjust as needed */
-border: none  ;
-background-color: #EEF2F5;
+.addButton {
+  width: 24px;
+  height: 24px;
+  cursor: pointer;
+  margin-right: -170px; /* Adjust as needed */
+  border: 2px solid #39ff14; /* Green fluorescent color, adjust as needed */
+  background-color: #EEF2F5;
+  border-radius: 50%; /* to make it round */
 }
+
 
 /* Adjust the existing styles for the heading container */
 .headingContainer {

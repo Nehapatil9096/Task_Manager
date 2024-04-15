@@ -137,84 +137,84 @@ const AnalyticsPage = () => {
         {/* Left Side Container */}
         <div className={styles.analyticsContainer1}>
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> Backlog Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.backlogTasks}</span>
-              </div>
-            </div>
-            <div className={styles.analyticsValue}></div>
+
+            <div className={styles.analyticsTitle1}>
+            <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
+           <div className={styles.text}>
+           <p>Backlog Tasks:</p>
+           </div>
+           <span className={styles.analyticsValue}>{analyticsDetails.backlogTasks}</span>
           </div>
+          </div>
+
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
+            <div className={styles.analyticsTitle1}>
               <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
               <div className={styles.text}>
               <p> ToDo Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.todoTasks}</span>
             </div>
+            <span className={styles.analyticsValue}>{analyticsDetails.todoTasks}</span>
             </div>
-            <div className={styles.analyticsValue}></div>
           </div>
+
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
+            <div className={styles.analyticsTitle1}>
               <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
               <div className={styles.text}>
               <p> In Progress Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.inProgressTasks}</span>
             </div>
+            <span className={styles.analyticsValue}>{analyticsDetails.inProgressTasks}</span>
             </div>
-            <div className={styles.analyticsValue}></div>
           </div>
+
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
+            <div className={styles.analyticsTitle1}>
               <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
               <div className={styles.text}>
               <p> Checked Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.checkedTasks}</span>
             </div>
+            <span className={styles.analyticsValue}>{analyticsDetails.checkedTasks}</span>
             </div>
-            <div className={styles.analyticsValue}></div>
           </div>
         </div>
         {/* Right Side Container */}
         <div className={styles.analyticsContainer2}>
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
+            <div className={styles.analyticsTitle1}>
               <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
               <div className={styles.text}>
               <p> Low Priority Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.lowPriorityTasks}</span>
-             </div>
+             </div>   
+              <span className={styles.analyticsValue}>{analyticsDetails.lowPriorityTasks}</span>
             </div>
           </div>
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
+            <div className={styles.analyticsTitle1}>
               <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
               <div className={styles.text}>
               <p> Moderate Priority Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.moderatePriorityTasks}</span>
             </div>
+            <span className={styles.analyticsValue}>{analyticsDetails.moderatePriorityTasks}</span>
             </div>
             <div className={styles.analyticsValue}></div>
           </div>
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
+            <div className={styles.analyticsTitle1}>
               <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
               <div className={styles.text}>
               <p> High Priority Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.highPriorityTasks}</span>
             </div>
-            </div>
+            <span className={styles.analyticsValue}>{analyticsDetails.highPriorityTasks}</span>
+          </div>
             <div className={styles.analyticsValue}></div>
           </div>
           <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle}>
+            <div className={styles.analyticsTitle1}>
               <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
               <div className={styles.text}>
               <p> Due Date Tasks:</p>
-    <span className={styles.analyticsValue}>{analyticsDetails.dueDateTasks}</span>
             </div>
+            <span className={styles.analyticsValue}>{analyticsDetails.dueDateTasks}</span>
             </div>
             <div className={styles.analyticsValue}></div>
           </div>

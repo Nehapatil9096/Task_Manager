@@ -33,7 +33,15 @@
 font-weight: bold;
   font-family: Open Sans;
 }
+.analyticsTitle1 {
+  display: flex;
+  align-items: center;
 
+}
+
+.analyticsValue {
+  margin-left: auto;
+}
 .analyticsTitle {
   margin-bottom: 10px;
 }
