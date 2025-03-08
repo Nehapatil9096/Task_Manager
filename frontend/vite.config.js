@@ -18,7 +18,7 @@ export default defineConfig({
   css: {
     postcss: {
       plugins: [
-        postcssNesting(), // Enable the PostCSS nesting plugin
+        postcssNesting(),
       ],
     },
   },
