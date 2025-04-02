@@ -1,106 +1,131 @@
+.analyticsTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  margin-bottom: 30px;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+}
+
 .analytics {
   display: flex;
   flex-wrap: wrap;
-  width: 100%;
-  gap: 4px;
+  gap: 20px;
+  justify-content: center;
   padding: 20px;
-  box-sizing: border-box;
-  font-size: medium;
-  margin-top: 70px;
-  border-radius: 5px;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.analyticsContainer1,
+.analyticsContainer2 {
+  flex: 1;
+  min-width: 300px;
+  max-width: 400px;
+  background: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.3s;
+}
+
+.analyticsContainer1:hover,
+.analyticsContainer2:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .analyticsSection {
-  flex-direction: column;
-  padding: 2px;
-  width: 500px;
-  font-size: 1.2rem;
-  font-family: Open Sans;
-
-}
-.ellipseImage {
-  margin-right: 5px; /* Add spacing between the image and text */
-}
-.text {
-  display: flex; /* Use flexbox for the container */
-  align-items: center; /* Align items vertically in the center */
-  font-family: Open Sans;
-  justify-content: space-between; /* Ensure space between elements */
-  
+  margin-bottom: 20px;
 }
 
-.analyticsValue {
-font-weight: bold;
-  font-family: Open Sans;
-}
 .analyticsTitle1 {
   display: flex;
   align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  background: #ecf0f1;
+  transition: background 0.3s;
+}
 
+.analyticsTitle1:hover {
+  background: #dfe6e9;
+}
+
+.ellipseImage {
+  width: 12px;
+  height: 12px;
+  flex-shrink: 0;
+}
+
+.text {
+  flex: 1;
+  font-size: 16px;
+  color: #34495e;
+  font-family: "Inter", sans-serif;
+}
+
+.text p {
+  margin: 0;
+  font-weight: 500;
 }
 
 .analyticsValue {
-  margin-left: auto;
-}
-.analyticsTitle {
-  margin-bottom: 10px;
-}
-.analyticsContainer1{
-  display: flex;
-  flex-direction: column; /* Stack the items vertically */
-  font-family: Open Sans;
-  flex: 0 0 80%; /* Occupy 80% of available width */
-  margin-right: 10px; /* Add margin to separate from right side */
-  flex: 1; /* Equal width for both containers */
-  margin-right: 20px; /* Adjust margin as needed */
-    background-color: #F9FCFF; /* Set the background color to light red */
-
-}
-/* Analytics Container 1 (left side) */
-.analyticsSection {
-  font-family: Open Sans;
+  font-size: 18px;
+  font-weight: 600;
+  color: #2980b9;
+  font-family: "Inter", sans-serif;
 }
 
-.analyticsContainer2 {
-  display: flex;
-  flex-direction: column; /* Stack the items vertically */
-  flex: 0 0 80%; /* Occupy 80% of available width */
-margin-right: 10px; /* Add margin to separate from right side */
-flex: 1; /* Equal width for both containers */
-margin-right: 20px; /* Adjust margin as needed */
-background-color: #F9FCFF; /* Set the background color to light red */
+/* Responsive Design */
+@media (max-width: 635px) {
+  .analyticsTitle {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
 
+  .analytics {
+    padding: 15px;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .analyticsContainer1,
+  .analyticsContainer2 {
+    min-width: 100%;
+    max-width: 100%;
+    padding: 15px;
+  }
+
+  .analyticsSection {
+    margin-bottom: 15px;
+  }
+
+  .analyticsTitle1 {
+    padding: 8px;
+    gap: 10px;
+  }
+
+  .text {
+    font-size: 14px;
+  }
+
+  .analyticsValue {
+    font-size: 16px;
+  }
 }
 
-.analyticsSection {
-  margin-bottom: 2px; /* Add spacing between sections */
-  font-family: Open Sans;
+/* Ensure scrolling if content overflows at 635x931 or smaller */
+@media (max-height: 931px) {
+  .analytics {
+    max-height: 100vh;
+    overflow-y: auto;
+  }
 
+  .analyticsContainer1,
+  .analyticsContainer2 {
+    max-height: none; /* Allow natural growth */
+  }
 }
-/* Combine .ellipseImage and .text into a single rule */
-
-
-.ellipseImage {
-  width: 10px; /* Adjust the width of the image as needed */
-  height: auto; /* Maintain aspect ratio */
-  margin-right: 5px; /* Add spacing between the image and text */
-}
-.analyticsTitle {
-/* Styles for the title */
-font-size: 1.5rem; /* Adjust the font size */
-margin-bottom: 10px; /* Add margin below the title */
-font-family: Open Sans;
-
-}
-/* AnalyticsPage.module.css */
-
-.leftContainer {
-float: left; /* Float the left container to the left */
-width: 50%; /* Set the width to 50% for equal distribution */
-}
-
-.rightContainer {
-float: right; /* Float the right container to the right */
-width: 50%; /* Set the width to 50% for equal distribution */
-}
-

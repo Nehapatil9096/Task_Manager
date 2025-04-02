@@ -1,153 +1,97 @@
-/* pages/settings/SettingsPage.module.css */
-
 .settingsContainer {
-    display: flex;
-    flex-direction: column;
-    width: 300px;
-    margin: 0 auto; /* Center horizontally */
-    margin-top: 20px; /* Add margin to shift down */
-    padding: 20px;
-    box-sizing: border-box;
-    background-color: #ffffff;
-    right: 0;
-    margin-left: 50px;
-    margin-top: -10px;
-  }
-  .settingsTitle{
-    font-size: 22px;
-    font-style: Open Sans;
-  margin-bottom: 25px;
-  margin-top: -10px;
-  }
-  .settingsForm {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 20px; /* Add padding */
-    box-sizing: border-box; /* Ensure padding doesn't affect width */
-    background-color: #ffffff;
-    border: none; /* remove border */
-  }
-  
-  .label {
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-  
-  .input {
-    width: 100%;
-    box-sizing: border-box;
-    border: 1px solid #ccc; /* Add a border */
-    border-radius: 5px;
-    font-size: 1rem;
-    line-height: 1.9;
-    transition: border-color 0.3s ease;
-    width: calc(100% - 30px); /* Adjust width to accommodate icon */
-    padding: 10px 30px; /* Adjust padding to move placeholder text to the right */
-  }
-  
-  .input:focus {
-    outline: none; /* Remove the default focus outline */
-    border-color: #4caf50;
-  }
-  
-  .settingsButton {
-    width: 100%;
-    padding: 10px;
-    background-color: #17A2B8;
-    color: #fff;
-    border: none;
-    border-radius: 25px;
-    font-size: 15px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    height: 35px;
-    width: 350px;
-
-  }
-  
-  .settingsButton:hover {
-    background-color: #054c57;
-  }
-  /* SettingsPage.module.css */
-  
-  /* Input Container */
-  .settingsLabel {
-    position: relative;
-  }
-  .settingsInput {
-    width: calc(100% - 50px); /* Adjust the width to start after the icons */
-    padding: 8px; /* Adjust padding as needed */
-    border: 1px solid #ccc;
-    border-radius: 5px;
-  }
-  /* Icon */
-  .icon {
-    position: absolute;
-    left: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    margin-top: -15px;
-    size: 10px;
-  }
-  
-  
-  .icon.password {
-    position: absolute;
-    left: calc(100% - 40px); /* Adjust as needed */
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px; /* Adjust as needed */
-    height: 24px; /* Adjust as needed */
-    background-size: cover;
-  }
-  .settingsInput,
-  .settingsInputPassword {
-    height: 35px;
-    margin-top: -10px;
-    width: 350px;
-    border-radius: 7px;
-    position: relative;
-  }
-  .view{
-  margin-left: -100px;
-  }
-
-  /* Add these styles to your existing stylesheet */
-
-/* Styles for the label container */
-.labelContainer {
-  position: relative;
-  display: inline-block;
+  max-width: 500px;
+  margin: 50px auto;
+  padding: 30px;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+  font-family: "Inter", sans-serif;
+  background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
 }
 
+.settingsTitle {
+  font-size: 28px;
+  font-weight: 700;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 30px;
+}
 
-.input {
+.settingsLabel {
+  display: flex;
+  align-items: center;
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.settingsInput,
+.settingsInputPassword {
   width: 100%;
-  box-sizing: border-box;
-  border: 1px solid #ccc; /* Add a border */
-  border-radius: 5px;
-  font-size: 1rem;
-  line-height: 1.5;
-  transition: border-color 0.3s ease;
-  width: calc(100% - 30px); /* Adjust width to accommodate icon */
-  padding: 10px 30px; /* Adjust padding to move placeholder text to the right */
-}
-/* Input Container */
-.inputContainer {
-  position: relative;
+  padding: 12px 40px 12px 12px;
+  border: 1px solid #dfe6e9;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #34495e;
+  background: #fff;
+  transition: border-color 0.3s, box-shadow 0.3s;
 }
 
-/* Icon */
+.settingsInput:focus,
+.settingsInputPassword:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+}
+
+.settingsInput::placeholder,
+.settingsInputPassword::placeholder {
+  color: #bdc3c7;
+}
+
 .icon {
   position: absolute;
-  left: 10px;
-  top: 50%;
-  transform: translateY(-50%);
+  right: 12px;
+  width: 20px;
+  height: 20px;
 }
+
 .icon1 {
   position: absolute;
-  left: 320px;
-  top: 30%;
-  transform: translateY(-50%);
+  right: 12px;
+  display: flex;
+  align-items: center;
+}
+
+.showPasswordIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.3s;
+}
+
+.showPasswordIcon:hover {
+  opacity: 1;
+}
+
+.settingsButton {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #3498db;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s, transform 0.2s;
+}
+
+.settingsButton:hover {
+  background: #2980b9;
+  transform: translateY(-2px);
+}
+
+.settingsButton:active {
+  transform: translateY(0);
 }

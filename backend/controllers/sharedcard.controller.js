@@ -309,7 +309,7 @@ export const getSharedCard = async (req, res) => {
         </head>
         <body>
 <img src="/codesandbox.png" alt="Pro Manage Logo"> <!-- Add image here -->
-      <h1>Pro Manage</h1>
+      <h1>Task Manager</h1>
           <div class="card">
 
             <!-- Priority display based on card.priority -->

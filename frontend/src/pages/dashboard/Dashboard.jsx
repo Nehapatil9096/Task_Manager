@@ -55,7 +55,7 @@ return (
 <div className={styles.sidebar}>
 <div className={styles.logoContainer}>
 <img src="/codesandbox.png" alt="logo Icon" className={styles.logo} />
-<div className={styles.brand}>Pro Manage</div>
+<div className={styles.brand}>Task Manager</div>
 </div>
 <nav>
 <div className={styles.logoContainer}>

@@ -4,85 +4,52 @@ import styles from "./AnalyticsPage.module.css";
 import ellipseImage from "/Ellipse 3.png";
 
 const AnalyticsPage = () => {
-  const { authUser, setAuthUserData } = useAuthContext();
-  const [cards, setCards] = useState(authUser.cards || []); // Initialize with user's existing cards
+  const { authUser } = useAuthContext();
+  const [cards, setCards] = useState(authUser.cards || []); 
 
-  // State to store analytics details
   const [analyticsDetails, setAnalyticsDetails] = useState({
     backlogTasks: 0,
     todoTasks: 0,
-    inProgressTasks: 0,
     highPriorityTasks: 0,
     moderatePriorityTasks: 0,
     lowPriorityTasks: 0,
     checkedTasks: 0,
-    dueDateTasks: 0,
   });
 
-  // Fetch user cards
   const fetchUserCards = async () => {
     try {
-      // Make an API request to fetch user cards
-      const response = await fetch("/api/users/cards");
-      if (!response.ok) {
-        throw new Error("Failed to fetch cards from the server");
-      }
+      const response = await fetch("/api/users/cards", {
+        method: "POST", // Ensure it matches the backend
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          startDate: "2025-04-01", 
+          endDate: "2025-04-30",
+        }),
+      });
 
-      // Parse the response data
+      if (!response.ok) throw new Error("Failed to fetch cards from server");
+
       const data = await response.json();
-
-      // Update state with the fetched cards
       setCards(data.cards || []);
+      setAnalyticsDetails(calculateAnalyticsDetails(data.cards || [])); // Update analytics immediately
     } catch (error) {
       console.error("Error fetching user cards:", error.message);
     }
   };
 
-  // Calculate analytics details on component mount or when cards change
-  useEffect(() => {
-    console.log("existing cards", cards); // Log the cards data
-
-    // Fetch user cards
-    fetchUserCards();
-
-    // Calculate analytics details
-    const updatedAnalyticsDetails = calculateAnalyticsDetails(cards);
-
-    // Update state with calculated details
-    setAnalyticsDetails(updatedAnalyticsDetails);
-  }, [cards]);
-
-  // Function to calculate analytics details
   const calculateAnalyticsDetails = (cards) => {
-    if (!cards || cards.length === 0) {
-      // Handle the case when cards is undefined or empty
-      return {
-        backlogTasks: 0,
-        todoTasks: 0,
-        inProgressTasks: 0,
-        highPriorityTasks: 0,
-        moderatePriorityTasks: 0,
-        lowPriorityTasks: 0,
-        checkedTasks: 0,
-        dueDateTasks: 0,
-      };
-    }
-
-    // Initialize analytics details
-    let updatedAnalyticsDetails = {
+    const updatedAnalyticsDetails = {
       backlogTasks: 0,
       todoTasks: 0,
-      inProgressTasks: 0,
       highPriorityTasks: 0,
       moderatePriorityTasks: 0,
       lowPriorityTasks: 0,
       checkedTasks: 0,
-      dueDateTasks: 0,
     };
 
-    // Iterate through cards to calculate details
+    const currentDate = new Date();
+
     cards.forEach((card) => {
-      // Task state counts
       switch (card.state) {
         case "Backlog":
           updatedAnalyticsDetails.backlogTasks++;
@@ -90,15 +57,13 @@ const AnalyticsPage = () => {
         case "ToDo":
           updatedAnalyticsDetails.todoTasks++;
           break;
-        case "In Progress":
+        case "InProgress": // ✅ Fixed from "Progress" to "InProgress"
           updatedAnalyticsDetails.inProgressTasks++;
           break;
-        // Add other states as needed
         default:
           break;
       }
 
-      // Priority counts
       switch (card.priority) {
         case "High":
           updatedAnalyticsDetails.highPriorityTasks++;
@@ -109,115 +74,67 @@ const AnalyticsPage = () => {
         case "Low":
           updatedAnalyticsDetails.lowPriorityTasks++;
           break;
-        // Add other priority levels as needed
         default:
           break;
       }
 
-      // Checked tasks count
-      const checkedTasks = card.checklist.filter((task) => task.checked).length;
-      updatedAnalyticsDetails.checkedTasks += checkedTasks;
+      if (card.checklist && Array.isArray(card.checklist)) {
+        updatedAnalyticsDetails.checkedTasks += card.checklist.filter((task) => task.checked).length;
+      }
 
-      // Due date tasks count
-      const dueDate = new Date(card.dueDate);
-      const currentDate = new Date();
-      if (card.dueDate && card.state !== "Done" && currentDate <= dueDate) {
-        updatedAnalyticsDetails.dueDateTasks++;
+      if (card.dueDate && card.state !== "Done") {
+        const dueDate = new Date(card.dueDate);
+        if (currentDate >= dueDate) {
+          updatedAnalyticsDetails.dueDateTasks++;
+        }
       }
     });
 
     return updatedAnalyticsDetails;
   };
 
+  useEffect(() => {
+    fetchUserCards();
+  }, []);
+
   return (
     <div>
-      <div className={styles.analyticsTitle}>Analytics</div> {/* Add the title "Analytics" */}
-
+      <div className={styles.analyticsTitle}>Analytics</div>
       <div className={styles.analytics}>
-        {/* Left Side Container */}
         <div className={styles.analyticsContainer1}>
-          <div className={styles.analyticsSection}>
-
-            <div className={styles.analyticsTitle1}>
-            <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-           <div className={styles.text}>
-           <p>Backlog Tasks:</p>
-           </div>
-           <span className={styles.analyticsValue}>{analyticsDetails.backlogTasks}</span>
-          </div>
-          </div>
-
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle1}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> ToDo Tasks:</p>
+          {[
+            { label: "Backlog Tasks", value: analyticsDetails.backlogTasks },
+            { label: "ToDo Tasks", value: analyticsDetails.todoTasks },
+            { label: "Checked Tasks", value: analyticsDetails.checkedTasks },
+          ].map((item, index) => (
+            <div key={index} className={styles.analyticsSection}>
+              <div className={styles.analyticsTitle1}>
+                <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
+                <div className={styles.text}>
+                  <p>{item.label}:</p>
+                </div>
+                <span className={styles.analyticsValue}>{item.value}</span>
+              </div>
             </div>
-            <span className={styles.analyticsValue}>{analyticsDetails.todoTasks}</span>
-            </div>
-          </div>
-
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle1}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> In Progress Tasks:</p>
-            </div>
-            <span className={styles.analyticsValue}>{analyticsDetails.inProgressTasks}</span>
-            </div>
-          </div>
-
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle1}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> Checked Tasks:</p>
-            </div>
-            <span className={styles.analyticsValue}>{analyticsDetails.checkedTasks}</span>
-            </div>
-          </div>
+          ))}
         </div>
-        {/* Right Side Container */}
+
         <div className={styles.analyticsContainer2}>
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle1}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> Low Priority Tasks:</p>
-             </div>   
-              <span className={styles.analyticsValue}>{analyticsDetails.lowPriorityTasks}</span>
+          {[
+            { label: "Low Priority Tasks", value: analyticsDetails.lowPriorityTasks },
+            { label: "Moderate Priority Tasks", value: analyticsDetails.moderatePriorityTasks },
+            { label: "High Priority Tasks", value: analyticsDetails.highPriorityTasks },
+          ].map((item, index) => (
+            <div key={index} className={styles.analyticsSection}>
+              <div className={styles.analyticsTitle1}>
+                <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
+                <div className={styles.text}>
+                  <p>{item.label}:</p>
+                </div>
+                <span className={styles.analyticsValue}>{item.value}</span>
+              </div>
             </div>
-          </div>
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle1}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> Moderate Priority Tasks:</p>
-            </div>
-            <span className={styles.analyticsValue}>{analyticsDetails.moderatePriorityTasks}</span>
-            </div>
-            <div className={styles.analyticsValue}></div>
-          </div>
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle1}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> High Priority Tasks:</p>
-            </div>
-            <span className={styles.analyticsValue}>{analyticsDetails.highPriorityTasks}</span>
-          </div>
-            <div className={styles.analyticsValue}></div>
-          </div>
-          <div className={styles.analyticsSection}>
-            <div className={styles.analyticsTitle1}>
-              <img src={ellipseImage} alt="Ellipse" className={styles.ellipseImage} />
-              <div className={styles.text}>
-              <p> Due Date Tasks:</p>
-            </div>
-            <span className={styles.analyticsValue}>{analyticsDetails.dueDateTasks}</span>
-            </div>
-            <div className={styles.analyticsValue}></div>
-          </div>
+          ))}
         </div>
       </div>
     </div>

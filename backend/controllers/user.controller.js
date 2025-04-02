@@ -31,29 +31,26 @@ export const getUserData = async (req, res) => {
 };
 
 // New controller function for fetching user cards
-// New controller function for fetching user cards based on date range
 export const getUserCards = async (req, res) => {
   try {
-    // Extract the start and end dates from the request body
     const { startDate, endDate } = req.body;
+    const user = await User.findById(req.user.id).select("cards");
 
-    // Fetch only the cards for the current user
-    const user = await User.findById(req.user.id).select('cards');
-    
-    // Implement logic to filter cards based on the date range (startDate and endDate)
     const filteredCards = user.cards.filter((card) => {
       const cardCreatedAt = new Date(card.createdAt);
       return cardCreatedAt >= new Date(startDate) && cardCreatedAt <= new Date(endDate);
     });
 
-    console.log("Filtered cards:", filteredCards);
+    console.log("✅ Filtered cards:", JSON.stringify(filteredCards, null, 2)); // Pretty print
 
     res.json({ cards: filteredCards || [] });
   } catch (error) {
-    console.error("Error in getUserCards: ", error.message);
+    console.error("❌ Error in getUserCards: ", error.message);
     res.status(500).json({ error: "Internal Server Error" });
   }
 };
+
+
 
 
 
