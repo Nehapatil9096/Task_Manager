@@ -11,7 +11,6 @@ const useSignup = () => {
 		if (!success) return;
 		setLoading(true);
 		try {
-			console.log(username, email, password, confirmPassword);
 
 			const res = await fetch("/api/auth/signup", {
 				method: "POST",
