@@ -616,27 +616,18 @@ html, body {
     display: none;
   }
 }
-/* Add to BoardPage.module.css */
 .searchInput {
-  padding: 8px 12px;
-  border: none;
-  border-radius: 8px;
-  background: #ecf0f1;
-  color: #2c3e50;
+  padding: 5px 10px;
+  margin-left: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
   font-size: 14px;
-  font-family: "Inter", sans-serif;
-  outline: none;
-  transition: background 0.3s, width 0.3s;
-  width: 150px; /* Default width */
+  width: 200px;
 }
 
 .searchInput:focus {
-  background: #dfe6e9;
-  width: 200px; /* Expand on focus */
-}
-
-.searchInput::placeholder {
-  color: #7f8c8d;
+  outline: none;
+  border-color: #007bff;
 }
 
 /* Responsive adjustments */

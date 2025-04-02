@@ -10,8 +10,6 @@ const BoardPage = () => {
   const currentDate = new Date().toISOString();
   const [showToDoCard, setShowToDoCard] = useState(false);
   const [cards, setCards] = useState(authUser.cards || []);
-  const [filteredCards, setFilteredCards] = useState(authUser.cards || []); // New state for filtered cards
-  const [searchQuery, setSearchQuery] = useState(""); // State for search input
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [activeMenuCardId, setActiveMenuCardId] = useState(null);
@@ -23,20 +21,14 @@ const BoardPage = () => {
   const [showToast, setShowToast] = useState(false);
   const [selectedFilter, setSelectedFilter] = useState("thisWeek");
   const [showFullTitle, setShowFullTitle] = useState(false);
+  const [searchQuery, setSearchQuery] = useState(""); // New state for search query
 
-  // Function to filter cards by title
-  const handleSearch = (query) => {
-    setSearchQuery(query);
-    const lowerCaseQuery = query.toLowerCase();
-    const filtered = cards.filter((card) =>
-      card.title.toLowerCase().includes(lowerCaseQuery)
-    );
-    setFilteredCards(filtered);
-  };
-
+  // Function to display a clipped version of the title
   const getClippedTitle = (title) => {
     const characterLimit = 25;
-    if (showFullTitle) return title;
+    if (showFullTitle) {
+      return title;
+    }
     return title.length > characterLimit ? `${title.slice(0, characterLimit)}...` : title;
   };
 
@@ -64,7 +56,7 @@ const BoardPage = () => {
   };
 
   const renderAdjacentSectionButtons = (card, currentSection) => {
-    const sections = ["Backlog", "ToDo", "Progress", "Done"];
+    const sections = ["Backlog", "Progress", "Done", "ToDo"];
     return sections
       .filter((targetSection) => targetSection !== currentSection)
       .map((targetSection) => (
@@ -82,12 +74,10 @@ const BoardPage = () => {
     try {
       const cardIndex = cards.findIndex((card) => card._id === cardId);
       if (cardIndex === -1) throw new Error(`Card with ID ${cardId} not found.`);
-
       const movedCard = cards.splice(cardIndex, 1)[0];
       movedCard.state = targetSection;
       const updatedCards = [movedCard, ...cards];
       setCards(updatedCards);
-      setFilteredCards(updatedCards); // Update filtered cards too
 
       const response = await fetch(`/api/users/cards/${cardId}/move`, {
         method: "PUT",
@@ -131,11 +121,9 @@ const BoardPage = () => {
       });
 
       if (!response.ok) throw new Error("Failed to fetch cards from the server");
-
       const data = await response.json();
       const updatedCards = data.cards.map((card) => ({ ...card, _id: card._id }));
-      setCards(updatedCards);
-      setFilteredCards(updatedCards); // Initialize filtered cards
+      setCards([...updatedCards]);
     } catch (error) {
       setError(error.message);
     } finally {
@@ -145,9 +133,8 @@ const BoardPage = () => {
 
   const handleSaveCard = async (newCard) => {
     try {
-      const updatedCards = [newCard, ...cards];
+      const updatedCards = [newCard];
       setCards(updatedCards);
-      setFilteredCards(updatedCards); // Update filtered cards
       const updatedUser = { ...authUser, cards: updatedCards };
       setAuthUserData(updatedUser);
 
@@ -171,11 +158,6 @@ const BoardPage = () => {
 
   const handleToggleChecklist = (cardId) => {
     setCards((prevCards) =>
-      prevCards.map((card) =>
-        card._id === cardId ? { ...card, showChecklist: !card.showChecklist } : card
-      )
-    );
-    setFilteredCards((prevCards) =>
       prevCards.map((card) =>
         card._id === cardId ? { ...card, showChecklist: !card.showChecklist } : card
       )
@@ -208,10 +190,7 @@ const BoardPage = () => {
       });
 
       if (!response.ok) throw new Error("Failed to delete the card");
-
-      const updatedCards = cards.filter((card) => card._id !== cardIdToDelete);
-      setCards(updatedCards);
-      setFilteredCards(updatedCards); // Update filtered cards
+      setCards((prevCards) => prevCards.filter((card) => card._id !== cardIdToDelete));
     } catch (error) {
       console.error("Error deleting card:", error.message);
     } finally {
@@ -224,8 +203,12 @@ const BoardPage = () => {
       <div className={styles.content}>
         <p>Are you sure you want to Delete?</p>
         <div className={styles.popupButtons}>
-          <button onClick={confirmDeleteAction} className={styles.deletePopupButton}>Yes</button>
-          <button onClick={closeDeleteConfirmation} className={styles.deletePopupButton}>No</button>
+          <button onClick={confirmDeleteAction} className={styles.deletePopupButton}>
+            Yes
+          </button>
+0          <button onClick={closeDeleteConfirmation} className={styles.deletePopupButton}>
+            No
+          </button>
         </div>
       </div>
     </div>
@@ -238,7 +221,7 @@ const BoardPage = () => {
         priority: editedCard.priority,
         checklist: editedCard.checklist,
         dueDate: editedCard.dueDate,
-        state: editedCard.state || "ToDo",
+        state: "ToDo",
       };
 
       const response = await fetch(`/api/users/onecard/${editedCard._id}`, {
@@ -267,12 +250,12 @@ const BoardPage = () => {
     navigator.clipboard.writeText(sharedLink).then(() => setShowToast(true));
   };
 
-  const closeToast = () => setShowToast(false);
-
   useEffect(() => {
     const timeout = setTimeout(closeToast, 2000);
     return () => clearTimeout(timeout);
   }, [showToast]);
+
+  const closeToast = () => setShowToast(false);
 
   const menuRef = useRef();
 
@@ -286,21 +269,20 @@ const BoardPage = () => {
     return () => document.removeEventListener("click", handleClickOutsideMenu);
   }, []);
 
-  const handleMenuButtonClick = (cardId) => {
-    setActiveMenuCardId(cardId);
-  };
-
+  const handleMenuButtonClick = (cardId) => setActiveMenuCardId(cardId);
   const closeMenuPopup = () => setActiveMenuCardId(null);
 
   const handleCollapseAll = () => {
-    const updatedCards = cards.map((card) => ({ ...card, showChecklist: false }));
-    setCards(updatedCards);
-    setFilteredCards(updatedCards);
+    setCards((prevCards) => prevCards.map((card) => ({ ...card, showChecklist: false })));
   };
+
+  // Filter cards based on search query
+  const filteredCards = cards.filter((card) =>
+    card.title.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <div className={styles.boardPage}>
-      {/* Top Section with Search */}
       <div className={`${styles.top} ${styles.whiteBackground}`}>
         <div className={`${styles.topLeftText} ${styles.whiteBackground}`}>
           <h1 className={styles.welcome}>Welcome, {authUser.username}!</h1>
@@ -322,16 +304,15 @@ const BoardPage = () => {
             {/* Search Input */}
             <input
               type="text"
-              placeholder="Search tasks by title..."
+              placeholder="Search by task title..."
               value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className={styles.searchInput} // New class for styling
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className={styles.searchInput} // Add this class in your CSS
             />
           </div>
         </div>
       </div>
 
-      {/* Board Sections */}
       <div className={styles.boardSections}>
         {/* Backlog Section */}
         <div className={styles.boardSection}>
@@ -353,7 +334,10 @@ const BoardPage = () => {
                   className={`${styles.card} ${card.showChecklist ? "" : styles.collapsed}`}
                 >
                   <div className={styles.menuContainer}>
-                    <div className={styles.menuButton} onClick={() => handleMenuButtonClick(card._id)}>
+                    <div
+                      className={styles.menuButton}
+                      onClick={() => handleMenuButtonClick(card._id)}
+                    >
                       <span>…</span>
                     </div>
                     {activeMenuCardId === card._id && (
@@ -402,7 +386,9 @@ const BoardPage = () => {
                           {card.checklist.map((item, index) => (
                             <li key={index} className={`${styles.checklistItem} ${styles.wrapText}`}>
                               {item.checked ? (
-                                <span className={styles.checked}><span className={styles.checkbox}></span></span>
+                                <span className={styles.checked}>
+                                  <span className={styles.checkbox}></span>
+                                </span>
                               ) : (
                                 <span className={styles.unchecked}></span>
                               )}
@@ -431,7 +417,9 @@ const BoardPage = () => {
         <div className={styles.boardSection}>
           <div className={styles.headingContainer}>
             <h2>To do</h2>
-            <button className={styles.addButton} onClick={handleToDoCardOpen}>+</button>
+            <button className={styles.addButton} onClick={handleToDoCardOpen}>
+              +
+            </button>
             <img
               src="/codicon_collapse-all.png"
               alt="Collapse All"
@@ -449,7 +437,10 @@ const BoardPage = () => {
                   className={`${styles.card} ${card.showChecklist ? "" : styles.collapsed}`}
                 >
                   <div className={styles.menuContainer}>
-                    <div className={styles.menuButton} onClick={() => setActiveMenuCardId(card._id)}>
+                    <div
+                      className={styles.menuButton}
+                      onClick={() => setActiveMenuCardId(card._id)}
+                    >
                       <span>…</span>
                     </div>
                     {activeMenuCardId === card._id && (
@@ -498,7 +489,9 @@ const BoardPage = () => {
                           {card.checklist.map((item, index) => (
                             <li key={index} className={`${styles.checklistItem} ${styles.wrapText}`}>
                               {item.checked ? (
-                                <span className={styles.checked}><span className={styles.checkbox}></span></span>
+                                <span className={styles.checked}>
+                                  <span className={styles.checkbox}></span>
+                                </span>
                               ) : (
                                 <span className={styles.unchecked}></span>
                               )}
@@ -543,7 +536,10 @@ const BoardPage = () => {
                   className={`${styles.card} ${card.showChecklist ? "" : styles.collapsed}`}
                 >
                   <div className={styles.menuContainer}>
-                    <div className={styles.menuButton} onClick={() => setActiveMenuCardId(card._id)}>
+                    <div
+                      className={styles.menuButton}
+                      onClick={() => setActiveMenuCardId(card._id)}
+                    >
                       <span>…</span>
                     </div>
                     {activeMenuCardId === card._id && (
@@ -592,7 +588,9 @@ const BoardPage = () => {
                           {card.checklist.map((item, index) => (
                             <li key={index} className={`${styles.checklistItem} ${styles.wrapText}`}>
                               {item.checked ? (
-                                <span className={styles.checked}><span className={styles.checkbox}></span></span>
+                                <span className={styles.checked}>
+                                  <span className={styles.checkbox}></span>
+                                </span>
                               ) : (
                                 <span className={styles.unchecked}></span>
                               )}
@@ -637,7 +635,10 @@ const BoardPage = () => {
                   className={`${styles.card} ${card.showChecklist ? "" : styles.collapsed}`}
                 >
                   <div className={styles.menuContainer}>
-                    <div className={styles.menuButton} onClick={() => setActiveMenuCardId(card._id)}>
+                    <div
+                      className={styles.menuButton}
+                      onClick={() => setActiveMenuCardId(card._id)}
+                    >
                       <span>…</span>
                     </div>
                     {activeMenuCardId === card._id && (
@@ -686,7 +687,9 @@ const BoardPage = () => {
                           {card.checklist.map((item, index) => (
                             <li key={index} className={`${styles.checklistItem} ${styles.wrapText}`}>
                               {item.checked ? (
-                                <span className={styles.checked}><span className={styles.checkbox}></span></span>
+                                <span className={styles.checked}>
+                                  <span className={styles.checkbox}></span>
+                                </span>
                               ) : (
                                 <span className={styles.unchecked}></span>
                               )}
@@ -713,7 +716,11 @@ const BoardPage = () => {
 
         {modalVisible && <ToDoCard onClose={handleToDoCardClose} onSave={handleSaveCard} />}
         {editedCard && editedCard._id && (
-          <ToDoCard onClose={handleToDoCardClose} onSave={handleSaveEdit} initialData={editedCard} />
+          <ToDoCard
+            onClose={handleToDoCardClose}
+            onSave={handleSaveEdit}
+            initialData={editedCard}
+          />
         )}
       </div>
 
